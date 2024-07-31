@@ -20,7 +20,7 @@ export default {
   ],
   theme: {
     extend:{
-    color:{
+    colors:{
       primary:{
         900: withOpacity('--color-primary-900'),
         800: withOpacity('--color-primary-800'),
@@ -56,7 +56,7 @@ export default {
  
     },
       fontFamily:{
-        sans:['Vazir',... fontFamily.sans]
+        sans:["Vazir",... fontFamily.sans]
       }
     },
   },
