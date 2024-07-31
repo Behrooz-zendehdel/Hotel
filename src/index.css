@@ -163,8 +163,4 @@ table td {
   color: rgb(var(--color-secondary-600));
 }
 
-label {
-  display: block;
-}
-
 /*  react tag input */
