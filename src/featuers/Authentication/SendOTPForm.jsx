@@ -4,11 +4,10 @@ import { Mutation, useMutation, useQuery } from "@tanstack/react-query";
 import { getOtp } from "../../Services/authService";
 import { toast } from "react-hot-toast";
 import Loader from "../../UI/Loader";
-function SendOTPForm({ setStep }) {
+function SendOTPForm({ setStep ,phoneNumber,onChange }) {
   const { isPending, isError, data, mutateAsync } = useMutation({
     MutationFn: getOtp,
   });
-  const [phoneNumber, setPhoneNumber] = useState("");
   const sendOtpHandler = async (e) => {
     e.preventDefualt();
     try {
@@ -26,7 +25,7 @@ function SendOTPForm({ setStep }) {
           label="شماره موبایل"
           name="phoneNumber"
           value={phoneNumber}
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          onChange={onChange}
         />
         <div>
           {!isPending ? (
