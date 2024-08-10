@@ -8,11 +8,13 @@ function AuthContainer() {
   const {
     isPending: isSendingOtp,
     isError,
-    data,
+    data: otpResponse,
     mutateAsync,
   } = useMutation({
     MutationFn: getOtp,
   });
+
+
   const sendOtpHandler = async (e) => {
     e.preventDefault();
     try {
@@ -42,8 +44,9 @@ function AuthContainer() {
         return (
           <CheckOTPForm
             phoneNumber={phoneNumber}
-            onBack={() => setStep((s) => s - 1)}
+            onBack={() => setStep(1)}
             onResendOtp={sendOtpHandler}
+            otpResponse={otpResponse}
           />
         );
       default:

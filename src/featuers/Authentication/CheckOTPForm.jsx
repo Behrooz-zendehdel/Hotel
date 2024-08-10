@@ -5,17 +5,19 @@ import { checkOtp } from "../../Services/authService";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 import { HiArrowRight } from "react-icons/hi";
+import { CiEdit } from "react-icons/ci";
+import Loader from "../../UI/Loader";
 const RESEND_TIME = 90;
 
-function CheckOTPForm({ phoneNumber, onBack, onResendOtp }) {
+function CheckOTPForm({ phoneNumber, onBack, onResendOtp, otpResponse }) {
   const navigate = useNavigate();
   const [time, setTime] = useState(RESEND_TIME);
   const [otp, setOtp] = useState("");
-  const { isPending, error, data, mutateAysnc } = useMutation({
+  const { isPending, mutateAysnc } = useMutation({
     mutationFn: checkOtp,
   });
   const checkOtpHandler = async (e) => {
-    e.preverntDefault();
+    e.preventDefault();
     try {
       const { user, message } = await mutateAysnc({ phoneNumber, otp });
       toast.success(message);
@@ -23,7 +25,7 @@ function CheckOTPForm({ phoneNumber, onBack, onResendOtp }) {
         if (user.role === "OWNER") navigate("/owner");
         if (user.role === "FREELANCER") navigate("/freelancer");
       } else {
-        navigate("/compelete-profile");
+        navigate("/complete-profile");
       }
     } catch (error) {
       toast.error(error?.response?.data?.message);
@@ -36,12 +38,30 @@ function CheckOTPForm({ phoneNumber, onBack, onResendOtp }) {
       if (timer) clearInterval(timer);
     };
   }, [time]);
+
   return (
     <div>
       <button onClick={onBack}>
         <HiArrowRight className="w-6 h-6 text-secondary-500" />
+        {otpResponse && (
+          <p className="flex items-center gap-x-2 my-4">
+            <span>{otpResponse?.message}</span>
+            <button onClick={onBack}>
+              <CiEdit className="w-6 h-6 text-primary-900" />
+            </button>
+          </p>
+        )}
       </button>
-      <div className="mb-4">
+      {otpResponse && (
+        <p>
+          {otpResponse?.message} کد تایید برای شما ارسال شد برای ویرایش کلیک
+          کنید
+          <button onClick={onBack}>
+            <CiEdit />
+          </button>
+        </p>
+      )}
+      <div className="mb-4 text-secondary-500">
         {time > 0 ? (
           <p>{time} ثانیه تا ارسال مجدد کد</p>
         ) : (
@@ -66,7 +86,11 @@ function CheckOTPForm({ phoneNumber, onBack, onResendOtp }) {
             borderRadius: "0.5rem",
           }}
         />
-        <button className="btn btn--primary w-full">تایید</button>
+        {!isPending ? (
+          <Loader />
+        ) : (
+          <button className="btn btn--primary w-full">تایید</button>
+        )}
       </form>
     </div>
   );
