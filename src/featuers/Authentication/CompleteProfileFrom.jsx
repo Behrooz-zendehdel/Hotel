@@ -1,19 +1,29 @@
 import React, { useState } from "react";
 import TextField from "../../Hooks/TextField";
 import RadioInput from "../../UI/RadioInput";
+import { useMutation } from "@tanstack/react-query";
+import { completeProfile } from "../../Services/authService";
+import Loader from "../../UI/Loader";
 
 function CompleteProfileFrom() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [role, setRole] = useState("");
+  const { mutateAsync, isPending } = useMutation({
+    mutationFn: completeProfile,
+  });
 
-  const handelSubmit (e)=>{
+  const handelSubmit = async (e) => {
     e.preventDefault();
-    
+    try {
+      const { user, message } = await mutateAysnc({ name, role, email });
+      toast.success(message);
+    } catch (error) {
+      toast.error(error?.response?.data?.message);
+    }
+  };
 
-  }
   return (
-
     <div className="flex justify-center pt-10">
       <div className="w-full sm:max-w-sm">
         <form className="space-y-8" action="" onSubmit={handelSubmit}>
@@ -47,7 +57,11 @@ function CompleteProfileFrom() {
               onChange={(e) => setRole(e.target.value)}
             />
           </div>
-          <button className="btn btn--primary w-full">تایید</button>
+          {!isPending ? (
+            <Loader />
+          ) : (
+            <button className="btn btn--primary w-full">تایید</button>
+          )}
         </form>
       </div>
     </div>
