@@ -21,12 +21,21 @@ function CheckOTPForm({ phoneNumber, onBack, onResendOtp, otpResponse }) {
     try {
       const { user, message } = await mutateAysnc({ phoneNumber, otp });
       toast.success(message);
-      if (user.isActive) {
-        if (user.role === "OWNER") navigate("/owner");
-        if (user.role === "FREELANCER") navigate("/freelancer");
-      } else {
-        navigate("/complete-profile");
+      if (!user.isActive) return navigate("/complete-profile");
+      if (!user.status !== 2) {
+        navigate("/");
+        toast.error("پروفایل شما در انتظار تایید است ", { icon: "👏" });
+        return;
       }
+      if (user.role === "OWENER") return navigate("/owner");
+      if (user.role === "FREELANCER") return navigate("/freelancer");
+
+      // if (user.isActive) {
+      //   // if (user.role === "OWNER") navigate("/owner");
+      //   // if (user.role === "FREELANCER") navigate("/freelancer");
+      // } else {
+      //   navigate("/complete-profile");
+      // }
     } catch (error) {
       toast.error(error?.response?.data?.message);
     }
