@@ -88,8 +88,19 @@
   .btn--secondary {
     @apply bg-secondary-600 text-secondary-100;
   }
+  .badge--primary {
+    @apply bg-primary-900 text-white;
+  }
+  .badge--secondary {
+    @apply bg-secondary-200 text-secondary-600;
+  }
+  .badge--success {
+    @apply bg-green-500 text-white;
+  }
+  .badge--danger {
+    @apply bg-red-500 text-white;
+  }
 }
-
 html,
 body {
   padding: 0;
